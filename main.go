@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	// "os"
 	"path/filepath"
@@ -51,12 +52,28 @@ func main() {
 
 	fs := http.FileServer(http.Dir("web/public"))
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
-	
+
 	http.HandleFunc("/stuff", handlers.StuffHandler)
 	http.HandleFunc("/available-pets", handlers.AvailablePetsHandler)
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "ok")
+	})
+
+	http.HandleFunc("/reload", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/event-stream")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+		log.Println("connected to reload stream...")
+
+		io.WriteString(w, "retry: 500\n\n")
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+
+		for {
+			time.Sleep(5 * time.Second)
+		}
 	})
 
 	log.Println("listening on http://localhost:8080")

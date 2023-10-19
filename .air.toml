@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "temp"
+[build]
+  cmd = "go build -o ./temp/main ."
+  bin = "./temp/main"
+  delay = 0 # ms
+  exclude_dir = ["assets", "tmp", "vendor"]
+  include_ext = ["go", "tpl", "tmpl", "html"]
+  exclude_regex = ["_test\\.go"]
+
+[misc]
+clean_on_exit = false
