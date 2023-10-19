@@ -1,0 +1,12 @@
+<thead>
+    <th>Name</th>
+    <th>Age</th>
+</thead>
+<tbody>
+    {{ range .}}
+    <tr>
+        <td>{{ .Name }}</td>
+        <td>{{ .Age }}</td>
+    </tr>
+    {{ end }}
+</tbody>
